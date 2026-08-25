@@ -1,6 +1,7 @@
 package org.nackademin.guesthousecustomerservice.service;
 
 import lombok.RequiredArgsConstructor;
+import org.nackademin.guesthousecustomerservice.client.BookingClient;
 import org.nackademin.guesthousecustomerservice.dto.CustomerDto;
 import org.nackademin.guesthousecustomerservice.entity.Customer;
 import org.nackademin.guesthousecustomerservice.repository.CustomerRepository;
@@ -13,6 +14,7 @@ import java.util.List;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final BookingClient bookingClient;
 
     private CustomerDto toDto(Customer customer) {
         return new CustomerDto(
@@ -68,6 +70,11 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.findById(id)
                 .orElseThrow(() ->
                         new RuntimeException("Kund hittades inte"));
+
+        if (bookingClient.hasActiveBookings(id)) {
+            throw new IllegalStateException(
+                    "Kan inte ta bort kund! Det finns aktiva bokningar kopplade till kunden");
+        }
 
         customerRepository.deleteById(id);
     }
