@@ -1,4 +1,4 @@
-package org.nackademin.customerservice;
+package org.nackademin.guesthousecustomerservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
