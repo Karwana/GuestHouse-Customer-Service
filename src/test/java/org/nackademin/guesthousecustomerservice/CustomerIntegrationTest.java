@@ -1,15 +1,15 @@
 package org.nackademin.guesthousecustomerservice;
 
 import org.junit.jupiter.api.Test;
-import org.nackademin.guesthousecustomerservice.entity.Customer;
+import org.nackademin.guesthousecustomerservice.client.BookingClient;
+import org.nackademin.guesthousecustomerservice.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -49,6 +49,12 @@ public class CustomerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidCustomerJson))
                         .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void return404WhenGettingNonExistingCustomer() throws Exception {
+        mockMvc.perform(get("/api/customers/99999"))
+                .andExpect(status().isNotFound());
     }
 
 }
